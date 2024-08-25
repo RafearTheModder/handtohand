@@ -11,7 +11,7 @@ void InitLogger()
 		return;
 	}
 
-	*path /= fmt::format("{}.log"sv, Version::PROJECT);
+	*path /= fmt::format("{}.log"sv, "HandToHandVR"sv);
 	auto sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(path->string(), true);
 #endif
 
@@ -27,51 +27,25 @@ void InitLogger()
 	spdlog::set_default_logger(std::move(log));
 	spdlog::set_pattern("%s(%#): [%^%l%$] %v"s);
 
-	logger::info(FMT_STRING("{} v{}"), Version::PROJECT, Version::NAME);
+	logger::info(FMT_STRING("{} v{}"), "HandToHandVR"sv, "1.0.0");
 }
 
-
-//	1.5.97 Necessary
-extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Query(const SKSE::QueryInterface * a_skse, SKSE::PluginInfo * a_info)
-{
-	InitLogger();
-
-	a_info->infoVersion = SKSE::PluginInfo::kVersion;
-	a_info->name = Version::PROJECT.data();
-	a_info->version = Version::MAJOR;
-
-	if (a_skse->IsEditor()) {
-		logger::critical("Loaded in editor, marking as incompatible"sv);
-		return false;
-	}
-
-	const auto ver = a_skse->RuntimeVersion();
-	if (ver < SKSE::RUNTIME_VR_1_4_15) {
-		logger::critical(FMT_STRING("Unsupported runtime version {}"), ver.string());
-		return false;
-	}
-
-	return true;
-}
-
-
-extern "C" DLLEXPORT constinit auto SKSEPlugin_Version =
-	[]() {
-	SKSE::PluginVersionData v{};
-	v.PluginVersion(Version::MAJOR);
-	v.PluginName(Version::PROJECT);
-	v.AuthorName("colinswrath"sv);
-	v.UsesAddressLibrary(true);
-	v.HasNoStructUse(true);
-	v.UsesStructsPost629(false);
-	return v;
+extern "C" DLLEXPORT constexpr auto SKSEPlugin_Version = []() {
+    SKSE::PluginVersionData v{};
+    v.PluginVersion(REL::Version{ 1,0,0,0 });
+    v.PluginName("HandtoHandVR"sv);
+    v.AuthorName("Rafear and colinswrath"sv);
+    v.UsesAddressLibrary(true);
+    v.HasNoStructUse(true);
+    v.UsesStructsPost629(false);
+    return v;
 }();
 
-
-extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_skse)
+SKSEPluginLoad(const SKSE::LoadInterface* skse)
 {
 	InitLogger();
-	SKSE::Init(a_skse);
+
+	SKSE::Init(skse);
 	logger::info("Loading Hand to Hand");
 	PickpocketReplace::Install();
 	Settings::LoadSettings();

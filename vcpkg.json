@@ -6,16 +6,20 @@
   "description": "SKSE plugin based on CommonLibSSE, for unified AE/SE/VR deployment.",
   "homepage": "",
   "license": "MIT",
-  "features": {
-      "plugin": {
-          "description": "Build the SKSE plugin.",
-          "dependencies": [
-            "simpleini",
-            "commonlibsse-ng"
-          ]
-      }
-  },
-  "default-features": [
-      "plugin"
-  ]
+  "dependencies": [
+    "fmt",
+    "spdlog",
+    "rapidcsv",
+    "simpleini",
+    "xbyak",
+    "clib-util",
+    "directxtk"
+  ],
+  "vcpkg-configuration": {
+    "default-registry": {
+      "kind": "git",
+      "repository": "https://github.com/microsoft/vcpkg",
+      "baseline": "095ee06e7f60dceef7d713e3f8b1c2eb10d650d7"
+    }
+  }
 }
