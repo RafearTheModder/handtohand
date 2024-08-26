@@ -7,7 +7,7 @@ namespace PickpocketReplace
 	void static Install()
 	{
 		static REL::Relocation<std::uintptr_t> hook_LockPick{REL::RelocationID(51088,51968), 0x4E};
-		static REL::Relocation<std::uintptr_t> hook_LockPickBreak{ REL::RelocationID(51093,51975), 0x234 };
+		static REL::Relocation<std::uintptr_t> hook_LockPickBreak{ REL::RelocationID(51093,51975), REL::Module::IsVR() ? 0x279 : 0x234 };
 
 		static REL::Relocation<std::uintptr_t> hook_LockpickMenuSkillLevel{ REL::RelocationID(51084,51963), 0x73 };
 		static REL::Relocation<std::uintptr_t> hook_LockpickMenuXPProgress{ REL::RelocationID(51084,51963), 0xCA };
